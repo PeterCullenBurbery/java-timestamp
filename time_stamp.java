@@ -15,7 +15,7 @@ public class time_stamp {
         // 3-digit numeric fields by prefixing a literal 0 to 2-digit tokens
         String year = now.format(DateTimeFormatter.ofPattern("yyyy"));
         String month = now.format(DateTimeFormatter.ofPattern("0MM")); // e.g., 007
-        String day = now.format(DateTimeFormatter.ofPattern("0dd")); // e.g., 004
+        String day = now.format(DateTimeFormatter.ofPattern("0dd"));   // e.g., 004
         String hour = now.format(DateTimeFormatter.ofPattern("0HH"));
         String minute = now.format(DateTimeFormatter.ofPattern("0mm"));
         String second = now.format(DateTimeFormatter.ofPattern("0ss"));
@@ -36,11 +36,13 @@ public class time_stamp {
         String tzId = tz.getId().replace("/", "_slash_");
 
         // Unix timestamp with nanoseconds as decimal seconds
-        double unix_timestamp_with_nanos = now.toEpochSecond() + now.getNano() / 1_000_000_000.0;
-        String unix_timestamp_string = String.format("%.9f", unix_timestamp_with_nanos);
+        // Unix timestamp seconds and nanoseconds separately, joined by underscore
+        long unix_seconds = now.toEpochSecond();
+        int nanos = now.getNano();
+        String unix_timestamp_string = String.format("%d_%09d", unix_seconds, nanos);
 
         // Build underscore string:
-        // YYYY_MMM_DDD_HHH_MMM_SSS_NNNNNNNNN_TimeZone_ISOYEAR_WWWW_WEEKDAY_YYYY_DOY_UnixTimeInSeconds.nanoseconds
+        // YYYY_MMM_DDD_HHH_MMM_SSS_NNNNNNNNN_TimeZone_ISOYEAR_WWWW_WEEKDAY_YYYY_DOY_UnixSeconds_Nanoseconds
         String output = String.format(
                 "%s_%s_%s_%s_%s_%s_%s_%s_%04d_W%03d_%03d_%s_%s_%s",
                 year, month, day, hour, minute, second, nano, tzId,
